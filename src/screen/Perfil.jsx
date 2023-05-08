@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect , useState } from 'react';
 import { Text,
 SafeAreaView,
 View,
@@ -9,9 +9,39 @@ Image,
 Modal } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Opciones from '../components/Opciones';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+
 
 const Perfil = () =>{
 
+  const [datos,setDatos]= useState({})
+
+  
+useEffect(()=>{
+
+  AsyncStorage.getItem('userData')
+  .then((verificarCuentaString) => {
+    if (verificarCuentaString) {
+      // Convertir la cadena de texto a un objeto
+      const verificarCuenta = JSON.parse(verificarCuentaString);
+
+      // Establecer el estado de los datos con el componente obtenido
+      setDatos(verificarCuenta);
+    }
+  })
+  .catch((error) => console.error(error));
+
+  
+  
+
+},[])
+    
+console.log(datos)
+
+
+  
 
 
     return (
@@ -23,13 +53,13 @@ const Perfil = () =>{
       <Image style={style.imagen} source={require('../assets/logo1.png')}/>
       <Text style={style.textoNombre}>Bienvenido, <Text style={style.textoSpan}>Gabriel!</Text></Text>
       <View style={style.container}>
-        <Text style={style.titulo}>Cuenta Saint Patrick 1</Text>
-        <Text style={style.infoSaldo}>$ 40555,75</Text>
+        <Text style={style.titulo}>Cuenta Saint Patrick {datos.id}</Text>
+        <Text style={style.infoSaldo}>$ {datos.saldo}</Text>
         <Text style={style.subTituloSaldo}>Saldo disponible</Text>
         <View style={style.infoCuenta}>
              <View style={style.infoNumeroCuenta}>
               <Text style={style.textoInfoCuenta}>Cuenta</Text>
-              <Text>00393948349</Text>
+              <Text>{datos.numerocuenta}</Text>
              </View>
              <View style={style.infoNumeroCuenta}>
               <Text style={style.textoInfoCuenta}>N° tarjeta</Text>

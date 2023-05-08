@@ -13,6 +13,7 @@ import logo from '../assets/logo1.png'
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 const Login = () =>{
 
 const[user,setUser] = useState('');
@@ -51,18 +52,16 @@ useEffect(()=>{
   comprobarDatos();
 },[])
 
-const storeData = async (value) => {
-  try {
-    const jsonValue = JSON.stringify(value)
-    await AsyncStorage.setItem('@storage_Key', jsonValue)
-  } catch (e) {
-    // saving error
-  }
-}
+
 
 
 async function accesoVerificar(){
   const verificarCuenta = datos.find( dato =>  dato.numerocuenta === user)
+  const verificarCuentaString = JSON.stringify(verificarCuenta);
+  AsyncStorage.setItem('userData',verificarCuentaString)
+        .then(() => console.log('Componente verificarCuenta guardado en AsyncStorage.'))
+        .catch((error) => console.error(error));
+
   
   if(Number(verificarCuenta.pin) == pass && verificarCuenta.numerocuenta == user){
        Alert.alert(
@@ -70,7 +69,7 @@ async function accesoVerificar(){
         setTimeout(() => {
          navigation.navigate('Perfil')
         }, 3000);
-        storeData(verificarCuenta)
+        
         
   }
    else {
