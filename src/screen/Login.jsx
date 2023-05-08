@@ -11,12 +11,15 @@ Alert,
 Modal } from 'react-native';
 import logo from '../assets/logo1.png'
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = () =>{
 
 const[user,setUser] = useState('');
 const[ pass,setPass] = useState('');
 const [auth,setAuth] = useState(true)
+const [ datos,setDatos]= useState([])
+
 
 const navigation = useNavigation();
 
@@ -31,15 +34,59 @@ if(pass.length > 1 && user.length > 1){
 }
 },[user,pass])
 
+async function comprobarDatos(){
+
+ fetch('http://10.0.2.2:4001/usuario',{method:'GET',headers:{'Content-type':'application/json',Accept: "application/json"}})
+ .then(response => response.json())
+ .then(data => {
+  setDatos(data)
+  
+}).catch(err => console.log(err))
+
+}
 
 
 
+useEffect(()=>{
+  comprobarDatos();
+},[])
+
+const storeData = async (value) => {
+  try {
+    const jsonValue = JSON.stringify(value)
+    await AsyncStorage.setItem('@storage_Key', jsonValue)
+  } catch (e) {
+    // saving error
+  }
+}
+
+
+async function accesoVerificar(){
+  const verificarCuenta = datos.find( dato =>  dato.numerocuenta === user)
+  
+  if(Number(verificarCuenta.pin) == pass && verificarCuenta.numerocuenta == user){
+       Alert.alert(
+        'Login correcto',)
+        setTimeout(() => {
+         navigation.navigate('Perfil')
+        }, 3000);
+        storeData(verificarCuenta)
+        
+  }
+   else {
+    Alert.alert(
+      'Verifique , uno de los datos es incorrecto')
+      
+     
+      
+   }
+}
 
 
 
 const handleIngresar = () => {
 
-
+ 
     if (pass === '' || user === '') {
       Alert.alert(
         'No puede llevar campos vacios',
@@ -52,22 +99,23 @@ const handleIngresar = () => {
         ]
       );
     }
-     else {
-        navigation.navigate('Perfil')
-     }
+    
+    if(user.length < 16 || user.length > 16){
+      Alert.alert("la cuenta debe llevar 16 caracteres")
+    }else if(pass.length < 4 || pass.length > 4){
+      Alert.alert("el pin debe de ser de 4 caracteres")
+    }else{
+      accesoVerificar()
+    }
+   
+   
+  
+
+   
       
       
     
   };
-
-
-
-
-
-
-
-
-
 
     return (
      <SafeAreaView>
@@ -83,7 +131,7 @@ const handleIngresar = () => {
         value={user}
         onChangeText={setUser}
         style={style.input}/>
-        <Text style={style.label}>Contraseña</Text>
+        <Text style={style.label}>Pin</Text>
         <TextInput
         keyboardType='numeric'
         secureTextEntry={true}

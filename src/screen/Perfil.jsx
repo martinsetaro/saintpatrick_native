@@ -24,7 +24,7 @@ const Perfil = () =>{
       <Text style={style.textoNombre}>Bienvenido, <Text style={style.textoSpan}>Gabriel!</Text></Text>
       <View style={style.container}>
         <Text style={style.titulo}>Cuenta Saint Patrick 1</Text>
-        <Text style={style.infoSaldo}>$ 40555 </Text>
+        <Text style={style.infoSaldo}>$ 40555,75</Text>
         <Text style={style.subTituloSaldo}>Saldo disponible</Text>
         <View style={style.infoCuenta}>
              <View style={style.infoNumeroCuenta}>
@@ -67,7 +67,7 @@ const Perfil = () =>{
     infoSaldo:{
       fontFamily:'Commer',
       color:'#1d1d1d',
-      fontSize:40,
+      fontSize:45,
       textAlign:'center',
       marginTop:20
     },
@@ -76,6 +76,7 @@ const Perfil = () =>{
       color:'#1d1d1d',
       fontSize:15,
       textAlign:'center',
+      
     },
     imagen:{
       width:40,
@@ -120,7 +121,8 @@ const Perfil = () =>{
     textoInfoCuenta:{
       fontWeight:'700',
       
-    }
+    },
+    
   })
 
 
